@@ -5,13 +5,14 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import { AuthContext } from "./context/AuthContext";
+import { SERVER_URL } from "./helper/constants";
 
 import { useContext } from "react";
 
 function App() {
   const { user } = useContext(AuthContext);
 
-
+console.log(SERVER_URL)
   return (
     <CategoriesProvider>
       <Container className="my-4">

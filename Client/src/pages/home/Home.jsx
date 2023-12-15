@@ -15,6 +15,7 @@ import {
 } from "../../context/CategoryContext";
 
 import "./home.css";
+import { SERVER_URL } from "../../helper/constants";
 const Home = () => {
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
@@ -36,7 +37,7 @@ const Home = () => {
     (async function () {
       try {
         const response = await fetch(
-          `http://localhost:3001/expense/category/v1/categories/${decodedToken.userid}`,
+          `${SERVER_URL}/expense/category/v1/categories/${decodedToken.userid}`,
           {
             method: "GET",
             headers: {

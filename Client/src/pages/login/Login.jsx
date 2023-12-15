@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
 import { Link, useNavigate } from 'react-router-dom';
+import { SERVER_URL } from "../../helper/constants";
 
 
 
@@ -24,7 +25,7 @@ const Login = () => {
     event.preventDefault();
     authDispatch({ type: 'LOGIN_START'});
     try {
-      const response = await fetch('http://localhost:3001/expense/v1/login', {
+      const response = await fetch(`${SERVER_URL}/expense/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

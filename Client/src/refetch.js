@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "./context/AuthContext";
 import { useContext } from "react";
 import { CategoryContext } from "./context/CategoryContext";
+import { SERVER_URL } from "./helper/constants";
 
 const refetch = async () => {
   const { user } = useContext(AuthContext);
@@ -10,7 +11,7 @@ const refetch = async () => {
   const { updateCategory } = useContext(CategoryContext);
   try {
     const response = await fetch(
-      `http://localhost:3001/expense/category/v1/categories/${decodedToken.userid}`,
+      `${SERVER_URL}/expense/category/v1/categories/${decodedToken.userid}`,
       {
         method: "GET",
         headers: {

@@ -2,6 +2,7 @@ import { useContext, useRef } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { UNCATEGORIZED_ID, useCategories } from "../../context/CategoryContext";
 import { AuthContext } from "../../context/AuthContext";
+import { SERVER_URL } from "../../helper/constants";
 
 const AddExpenseModal = ({ show, handleClose, defaultCategoryId }) => {
 
@@ -19,7 +20,7 @@ const AddExpenseModal = ({ show, handleClose, defaultCategoryId }) => {
         try {
 
           const response = await fetch(
-            "http://localhost:3001/expense/category/v1/post-expense",
+            `${SERVER_URL}/expense/category/v1/post-expense`,
             {
               method: "POST",
               headers: {

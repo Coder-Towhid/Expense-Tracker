@@ -1,12 +1,12 @@
 
 const mysql = require('mysql');
 
-
+console.log("server",process.env.Db_Username)
 const connection = mysql.createConnection({
-    host: 'sql12.freemysqlhosting.net',
-    user: 'sql12670629',
-    password: 'Jks5iJvzEe',
-    database: 'sql12670629',
+    host: process.env.Server,
+    user: process.env.Db_Username,
+    password: process.env.Db_Password,
+    database: process.env.Database,
   });
 
 module.exports = {

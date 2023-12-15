@@ -1,3 +1,5 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require('express');
 const mysql = require('mysql');
 const {connection} = require("./db/connection")
@@ -7,13 +9,14 @@ const cors = require('cors');
 // const bodyparser = require('body-parser')
 
 const app = express();
-const port = 3001;
+const port =  process.env.SERVER_PORT || 3001;
 
 
 
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_TOKEN));
 app.use(cors());
+
 
 // Connect to MySQL
 connection.connect((err) => {

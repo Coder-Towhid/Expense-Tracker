@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { SERVER_URL } from "../../helper/constants";
 
 function Register() {
 
@@ -31,7 +32,7 @@ function Register() {
       
 
         try {
-          const response = await fetch('http://localhost:3001/expense/v1/register', {
+          const response = await fetch(`${SERVER_URL}/expense/v1/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useCategories } from "../../context/CategoryContext";
 import refetch from "../../refetch";
+import { SERVER_URL } from "../../helper/constants";
 const AddCategoryModal = ({ show, handleClose }) => {
   const nameRef = useRef();
   const { addCategory } = useCategories();
@@ -13,7 +14,7 @@ const AddCategoryModal = ({ show, handleClose }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost:3001/expense/category/v1/post-category",
+        `${SERVER_URL}/expense/category/v1/post-category`,
         {
           method: "POST",
           headers: {

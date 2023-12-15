@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Stack } from "react-bootstrap";
 import { UNCATEGORIZED_ID, useCategories } from "../../context/CategoryContext";
 import { AuthContext } from "../../context/AuthContext";
+import { SERVER_URL } from "../../helper/constants";
 
 const ViewExpensesModal = ({ categoryId, handleClose }) => {
   const { getCategoryExpenses, categories,  deleteCategory, deleteExpense } =
@@ -21,7 +22,7 @@ const ViewExpensesModal = ({ categoryId, handleClose }) => {
         (async function () {
           try {
             const response = await fetch(
-              `http://localhost:3001/expense/category/v1/get-expense/${categoryId}`,
+              `${SERVER_URL}/expense/category/v1/get-expense/${categoryId}`,
               {
                 method: "GET",
                 headers: {
