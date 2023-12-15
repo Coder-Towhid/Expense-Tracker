@@ -5,33 +5,20 @@ const jwt = require('jsonwebtoken')
 
 const router = express.Router();
 
-// router.post('/register', (req, res) => {
-//     const { name, password } = req.body;
 
-//     // Insert data into the 'register' table
-//     const sql = 'INSERT INTO register (name, password) VALUES (?, ?)';
-//     connection.query(sql, [name, password], (err, result) => {
-//       if (err) {
-//         console.error('Error inserting data: ' + err.stack);
-//         res.status(500).send('Error inserting data');
-//         return;
-//       }
-
-//       console.log('Data inserted successfully');
-//       res.status(200).send('Data inserted successfully');
-//     });
-//   });
 
 router.post("/register", async (req, res) => {
-  const { name, password } = req.body;
+
+  const { email, name, password } = req.body;
+
 
   try {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert hashed data into the 'register' table
-    const insertQuery = "INSERT INTO register (name, password) VALUES (?, ?)";
-    connection.query(insertQuery, [name, hashedPassword], (err, result) => {
+    const insertQuery = "INSERT INTO users (email, name, password) VALUES (? ,?,?)";
+    connection.query(insertQuery, [email, name, hashedPassword], (err, result) => {
       if (err) {
         console.error("Error inserting data:", err);
         res.status(500).send("Error inserting data");
@@ -48,17 +35,20 @@ router.post("/register", async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { name, password } = req.body;
+  const { email, password } = req.body;
 
+  console.log(email)
+  console.log(password)
   // Retrieve hashed password from the database based on the username
-  const selectQuery = 'SELECT id, name, password FROM register WHERE name = ?';
-  connection.query(selectQuery, [name], async (err, result) => {
+  const selectQuery = 'SELECT id,email, name, password FROM users WHERE email = ?';
+  connection.query(selectQuery, [email], async (err, result) => {
     if (err) {
       console.error('Error selecting data:', err);
       res.status(500).send('Error selecting data');
       return;
     }
 
+    console.log("result",result)
     if (result.length === 0) {
       // User not found
       res.status(401).send('Invalid credentials');
@@ -78,7 +68,7 @@ router.post('/login', async (req, res) => {
 
     if (passwordMatch) {
       // Passwords match, generate and send a JWT
-      const token = jwt.sign({ userId: user.id, username: user.name }, 'hasbacfsv', {
+      const token = jwt.sign({ userid: user.id, username: user.name, useremail: user.email }, 'hasbacfsv', {
         // expiresIn: '1h', // Token expiration time (adjust as needed)
       });
 
