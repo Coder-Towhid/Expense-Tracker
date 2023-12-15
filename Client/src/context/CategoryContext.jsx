@@ -1,7 +1,7 @@
 
 import React, { useContext, useState } from "react";
-import {v4 as uuidV4} from 'uuid'
-const CategoryContext = React.createContext();
+import { v4 as uuidV4 } from 'uuid';
+export const CategoryContext = React.createContext();
 
 export const UNCATEGORIZED_ID="Uncategorized"
 export function useCategories(){
@@ -12,23 +12,31 @@ export function useCategories(){
 // eslint-disable-next-line react/prop-types
 export const CategoriesProvider = ({children})=> {
     const [categories, setCategory] =useState([])
-    const  [expenses, setExpense] = useState([])
+    const [expenses, setExpense] = useState([])
 
     function getCategoryExpenses(categoryId){
-        return expenses.filter(expense => expense.categoryId === categoryId)
+        console.log("context get",expenses, typeof categoryId)
+        return expenses.filter(expense=> String(expense.categoryId) === String(categoryId))
     }
+
     function addExpense({name, amount, categoryId}){
+    
         setExpense(prevExpense=>{
-            
-            return[...prevExpense, {id: uuidV4(),name ,categoryId, amount}]
+            const newExpense = { id: uuidV4(), name, categoryId, amount };
+            console.log([...prevExpense, newExpense]);
+            return[...prevExpense, newExpense]
         })
+
+   
     }
-    function addCategory({name, amount}){
+    
+    function addCategory({name, amount, id}){
+        console.log('add category', name, amount)
         setCategory(prevCategory=>{
-            if(prevCategory.find(category => category.name === name)){
+            if(prevCategory.find(category => category.categoryname === name)){
                 return prevCategory
             }
-            return[...prevCategory, {id: uuidV4(), name, amount}]
+            return[...prevCategory, {id: id, categoryname:name, amount}]
         })
     }
     function deleteCategory({id}){
@@ -40,9 +48,14 @@ export const CategoriesProvider = ({children})=> {
         setExpense(prevExpense=>{
             return prevExpense.filter(expense=>expense.id !== id)
         })
+
+      
     }
+    
 
     return <CategoryContext.Provider value={{
+        updateCategory: setCategory,
+        updateExpense: setExpense,
         categories,
         expenses,
         getCategoryExpenses,

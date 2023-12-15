@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { UNCATEGORIZED_ID, useCategories } from "../../context/CategoryContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const AddExpenseModal = ({ show, handleClose, defaultCategoryId }) => {
 
@@ -9,18 +10,52 @@ const AddExpenseModal = ({ show, handleClose, defaultCategoryId }) => {
     const categoryIdRef = useRef()
 
     const {addExpense, categories}= useCategories()
-
-    function handleSubmit(e){
+    const { user } = useContext(AuthContext);
+    async function handleSubmit(e){
         e.preventDefault()
-        addExpense({
-            name: nameRef.current.value,
-            amount: amountRef.current.value,
-            categoryId: categoryIdRef.current.value
-        })
-        handleClose()
+        console.log(nameRef.current.value,amountRef.current.value,categoryIdRef.current.value)
+
+
+        try {
+
+          const response = await fetch(
+            "http://localhost:3001/expense/category/v1/post-expense",
+            {
+              method: "POST",
+              headers: {
+                "authorization": user,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ expensename: nameRef.current.value, amount: amountRef.current.value, categoryId:categoryIdRef.current.value }),
+            }
+          );
+        
+     
+          if (response.status === 201) {
+           
+            const result = await response.json();
+            console.log(result);
+          
+            addExpense({
+              name: nameRef.current.value,
+              amount: amountRef.current.value,
+              categoryId: categoryIdRef.current.value
+          })
+          
+          handleClose()
+           
+          } else {
+            console.log(response);
+       
+          }
+        } catch (error) {
+         
+          console.error("Error inserting data:", error);
+        }
+       
     }
   return (
-    <Modal show={show} onHinde={handleClose}>
+    <Modal show={show} onHide={handleClose} onRequestClose={true}>
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>New Expense</Modal.Title>
@@ -40,7 +75,7 @@ const AddExpenseModal = ({ show, handleClose, defaultCategoryId }) => {
          <option id={UNCATEGORIZED_ID}>Uncategorized</option>
           {categories.map(category=>(
             <option key={category.id} value={category.id}>
-              {category.name}
+              {category.categoryname}
             </option>
           ))}
          </Form.Select>

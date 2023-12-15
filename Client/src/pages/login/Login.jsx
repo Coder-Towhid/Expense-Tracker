@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Button, Form } from "react-bootstrap";
+import { AuthContext } from "../../context/AuthContext";
+import { Link, useNavigate } from 'react-router-dom';
+
+
 
 const Login = () => {
-  const [name, setName] = useState("");
+  const {authDispatch} = useContext(AuthContext);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleNameChange = (event) => {
-    setName(event.target.value);
+    setEmail(event.target.value);
  
   };
   const handlePasswordChange = (event) => {
@@ -15,25 +22,25 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+    authDispatch({ type: 'LOGIN_START'});
     try {
       const response = await fetch('http://localhost:3001/expense/v1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: name, password: password }),
+        body: JSON.stringify({ email: email, password: password }),
       });
+  
+
   
       if (response.ok) {
         const result = await response.json();
-        console.log('result:', result);
+
+        authDispatch({ type: 'LOGIN_SUCCESS', payload: result.token });
   
         // Assuming the backend returns a token upon successful login
-        const { token } = result;
-  
-        // Store the token in local storage
-        localStorage.setItem('token', token);
+        navigate("/");
   
         // Redirect the user to a new route upon successful login
         // history.push('/home'); // Replace '/dashboard' with the route you want to navigate to
@@ -41,22 +48,37 @@ const Login = () => {
         console.log('Invalid credentials');
       }
     } catch (error) {
+      authDispatch({ type: 'LOGIN_FAILURE' });
+
       console.error('Error fetching data:', error);
     }
   
-    console.log(name);
-    console.log(password);
+   
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="username" value={name}  onChange={handleNameChange} />
 
-      <input type="password" placeholder="password" value={password}  onChange={handlePasswordChange} />
-      <button type="submit">LOGIN</button>
-    </form>
+  return (
+    <Form  onSubmit={handleSubmit}>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Email address</Form.Label>
+        <Form.Control type="email" placeholder="username" value={email}  onChange={handleNameChange} />
+        <Form.Text className="text-muted">
+          We'll never share your email with anyone else.
+        </Form.Text>
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control  type="password" placeholder="password" value={password}  onChange={handlePasswordChange}/>
+      </Form.Group>
+ 
+      <Button variant="primary" type="submit">
+        Login
+      </Button>
+    </Form>
   );
+
+
 };
 
 export default Login;
-0
