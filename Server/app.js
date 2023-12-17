@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const {connection} = require("./db/connection")
 
 const cookieParser = require('cookie-parser')
