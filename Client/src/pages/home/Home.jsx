@@ -1,11 +1,11 @@
 import { Button, Stack } from "react-bootstrap";
 
-import CategoryCard from "../../components/CategoryCard/CategoryCard";
-
 import { jwtDecode } from "jwt-decode";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AddCategoryModal from "../../components/AddCategoryModal/AddCategoryModal";
 import AddExpenseModal from "../../components/AddExpenseModal/AddExpenseModal";
+import CategoryCard from "../../components/CategoryCard/CategoryCard";
 import UncategorizedCard from "../../components/Uncategorized/UncategorizedCard";
 import ViewExpensesModal from "../../components/ViewExpenses/ViewExpensesModal";
 import { AuthContext } from "../../context/AuthContext";
@@ -14,8 +14,8 @@ import {
   UNCATEGORIZED_ID,
 } from "../../context/CategoryContext";
 
-import "./home.css";
 import { SERVER_URL } from "../../helper/constants";
+import "./home.css";
 const Home = () => {
   const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
@@ -25,14 +25,25 @@ const Home = () => {
 
   const { categories, updateCategory } = useContext(CategoryContext);
 
+
+
   function openAddExpenseModal(categoryId) {
     setShowAddExpenseModal(true);
     setAddExpenseModalCategoryId(categoryId);
   }
 
-  const { user } = useContext(AuthContext);
+  const { user, authDispatch } = useContext(AuthContext);
+
   const decodedToken = jwtDecode(user);
-  console.log(decodedToken);
+
+  const handleSignout = () => {
+    localStorage.removeItem("token");
+    authDispatch({ type: "LOG_OUT" });
+
+    
+    
+  };
+
   useEffect(() => {
     (async function () {
       try {
@@ -62,8 +73,9 @@ const Home = () => {
 
   return (
     <>
-      <Stack className="mb-4">
+      <Stack direction="horizontal" className="mb-4">
         <h1 className="text-center">Hello - {decodedToken.username}</h1>
+        <Button onClick={handleSignout}>Sign Out</Button>
       </Stack>
 
       <Stack direction="horizontal" gap="2" className="mb-4">

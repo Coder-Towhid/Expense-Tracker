@@ -18,8 +18,8 @@ console.log(SERVER_URL)
       <Container className="my-4">
         <Routes>
           <Route path="/" element={user ? <Home /> : <Login />} />
-          <Route path="login" element={user ? <Home /> : <Login />} />
-          <Route path="register" element={user ? <Home /> : <Register />} />
+          <Route path="/login" element={user ? <Home /> : <Login />} />
+          <Route path="/register" element={user ? <Home /> : <Register />} />
         </Routes>
       </Container>
     </CategoriesProvider>
